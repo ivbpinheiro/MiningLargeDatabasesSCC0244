@@ -1,0 +1,25 @@
+version: '3'
+services:
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - mynetwork
+
+  jupyter:
+    build:
+      context: .
+      dockerfile: Dockerfile  # Usando o Dockerfile personalizado
+    ports:
+      - "8888:8888"
+    volumes:
+      - "C:\\Users\\ivanp\\OneDrive\\Área de Trabalho\\docs\\www\\public\\SCC0244 - Mineração a partir de Grandes Bases de Dados:/home/jovyan/work"
+    networks:
+      - mynetwork
+    depends_on:
+      - postgres
+networks:
+  mynetwork:
