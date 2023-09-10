@@ -13,10 +13,13 @@ services:
     build:
       context: .
       dockerfile: Dockerfile  # Usando o Dockerfile personalizado
+    environment:
+      - SEVENZIP_PATH=/usr/bin/7z
     ports:
       - "8888:8888"
     volumes:
-      - "C:\\Users\\ivanp\\OneDrive\\Área de Trabalho\\docs\\www\\public\\SCC0244 - Mineração a partir de Grandes Bases de Dados:/home/jovyan/work"
+      - "H:\\docs\\www\\public\\SCC0244 - Mineração a partir de Grandes Bases de Dados:/home/jovyan/work"
+      - "/usr/bin/7z:/home/jovyan/work"
     networks:
       - mynetwork
     depends_on:
