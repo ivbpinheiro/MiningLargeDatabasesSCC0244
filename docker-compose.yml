@@ -4,6 +4,8 @@ services:
     image: postgres
     environment:
       POSTGRES_PASSWORD: postgres
+    volumes:
+      - "H:\\docs\\www\\public\\SCC0244 - Mineração a partir de Grandes Bases de Dados:/home/jovyan/work"
     ports:
       - "5432:5432"
     networks:
@@ -19,10 +21,20 @@ services:
       - "8888:8888"
     volumes:
       - "H:\\docs\\www\\public\\SCC0244 - Mineração a partir de Grandes Bases de Dados:/home/jovyan/work"
-      - "/usr/bin/7z:/home/jovyan/work"
     networks:
       - mynetwork
     depends_on:
       - postgres
+
+  7zip:
+    image: debian:buster
+    environment:
+      - DEBIAN_FRONTEND=noninteractive
+    volumes:
+      - ./7zip:/opt/7zip
+    command: ["/bin/bash", "-c", "apt-get update && apt-get install -y --no-install-recommends p7zip-full && apt-get clean && rm -rf /var/lib/apt/lists/*"]
+    networks:
+      - mynetwork
+
 networks:
   mynetwork:
