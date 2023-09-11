@@ -1,0 +1,30 @@
+version: '3'
+services:
+  postgres:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: FapCov2103
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:      
+      - "H:\\docs\\www\\public\\SCC0244\\data:/home/jovyan/work"
+    ports:
+      - "5432:5432"
+    networks:
+      - mynetwork
+
+  jupyter:
+    build:
+      context: .
+      dockerfile: Dockerfile  # Usando o Dockerfile personalizado
+    ports:
+      - "8888:8888"
+    volumes:
+      - "C:\\Users\\ivanp\\OneDrive\\Área de Trabalho\\scc0244:/home/jovyan/work"
+    networks:
+      - mynetwork
+    depends_on:
+      - postgres
+
+networks:
+  mynetwork:
