@@ -1,12 +1,16 @@
-# Use a imagem base jupyter/datascience-notebook
 FROM jupyter/datascience-notebook:latest
 
-# Troque para o usuário root para executar comandos com privilégios
 USER root
 
-# Instala o utilitário psql, psycopg2-binary, SQLAlchemy e ipython-sql
-RUN apt-get update && \
-    apt-get install -y postgresql-client && 
+ENV NB_UID=1234 \
+    NB_GID=5678 
 
-# Volte para o usuário notebook padrão (não-root)
+COPY ./requirements.txt /tmp/requirements.txt
+
+RUN apt-get update && \
+    apt-get install -y postgresql-client sudo && \
+    pip install -r /tmp/requirements.txt && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
 USER $NB_UID

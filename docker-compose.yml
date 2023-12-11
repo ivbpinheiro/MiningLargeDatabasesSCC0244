@@ -1,7 +1,8 @@
-version: '3'
+version: '3.7'
 services:
   postgres:
     image: postgres:latest
+    container_name: postgres-db1
     environment:
       POSTGRES_DB: FapCov2103
       POSTGRES_USER: postgres
@@ -10,21 +11,57 @@ services:
       - "H:\\docs\\www\\public\\SCC0244\\data:/home/jovyan/work"
     ports:
       - "5432:5432"
+    restart: unless-stopped
+    networks:
+      - mynetwork
+  
+  nobel:
+    image: postgres:latest
+    container_name: postgres-db2
+    environment:
+      POSTGRES_DB: Nobel
+      POSTGRES_USER: postgres2
+      POSTGRES_PASSWORD: postgres2
+    volumes:
+      - "H:\\docs\\www\\public\\SCC0244\\data:/home/jovyan/work"
+    ports:
+      - "5433:5432"
+    restart: unless-stopped
     networks:
       - mynetwork
 
+  hydra:
+    container_name: hydra
+    image: ghcr.io/hydradatabase/hydra:latest
+    ports:
+      - 5434:5432
+    environment:
+      POSTGRES_USER: postgres3
+      POSTGRES_PASSWORD: postgres3
+    volumes:
+      - ./volumes/db:/var/lib/postgresql/data
+      - ./postgresql.conf:/etc/postgresql/postgresql.conf
+    command: postgres -c 'config_file=/etc/postgresql/postgresql.conf'
+    networks:
+      - mynetwork
+      
   jupyter:
     build:
       context: .
       dockerfile: Dockerfile  # Usando o Dockerfile personalizado
+    restart: unless-stopped
+    user: root
+    environment: 
+      - JUPYTER_ENABLE_LAB=yes
+      - RESTARTABLE=yes
     ports:
       - "8888:8888"
     volumes:
-      - "C:\\Users\\ivanp\\OneDrive\\Área de Trabalho\\scc0244:/home/jovyan/work"
+      - ./:/home/jovyan/work
     networks:
       - mynetwork
     depends_on:
       - postgres
-
+    
 networks:
   mynetwork:
